@@ -1,37 +1,37 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: mongodb
+  name: redis
   labels:
-    app: mongodb
+    app: redis
     tier: db
     project: roboshop 
 spec:
   selector:
     matchLabels:
-      app: mongodb
+      app: redis
       tier: db
       project: roboshop
-  serviceName: "mongodb"
+  serviceName: "redis"
   replicas: 1
   template:
     metadata:
       labels:
-        app: mongodb
+        app: redis
         tier: db
         project: roboshop
     spec:
       containers:
-      - name: praveenkothapally/mongodb:1.0.0
-        image: nginx
+      - name: redis
+        image: redis
         #Now below steps are importent 
         volumeMounts:
-        - name: mongodb
-          mountPath: /data/db
+        - name: redis
+          mountPath: /data
   # this is PVC directly.
   volumeClaimTemplates:
   - metadata:
-      name: mongodb
+      name: redis
     spec:
       accessModes: [ "ReadWriteOnce" ]
       storageClassName: "roboshop-dynamic-ebs"
@@ -42,15 +42,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb
+  name: redis
 spec:
   clusterIP: None #you have to mention cluster ip should be none in headless
   selector:
-    app: mongodb
+    app: redis
     tier: db
     project: roboshop
   ports:
-  - name: mongodb-port
+  - name: redis-port
     protocol: TCP
-    port: 27017 # this port belongs to service
-    targetPort: 27017 # this port belongs to (pod or container)
+    port: 6379 # this port belongs to service
+    targetPort: 6379 # this port belongs to (pod or container)
