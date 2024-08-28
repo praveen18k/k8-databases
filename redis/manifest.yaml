@@ -22,8 +22,8 @@ spec:
         project: roboshop
     spec:
       containers:
-      - name: mongodb
-        image: praveenkothapally/mongodb:1.0.0
+      - name: praveenkothapally/mongodb:1.0.0
+        image: nginx
         #Now below steps are importent 
         volumeMounts:
         - name: mongodb
